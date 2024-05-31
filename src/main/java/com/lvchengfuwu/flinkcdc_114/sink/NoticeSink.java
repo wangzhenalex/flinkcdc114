@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -16,14 +18,26 @@ import java.io.Serializable;
  */
 @Slf4j
 public class NoticeSink implements SinkFunction<String>, Serializable {
+    private Map<String, String> operationMap;
+
+    public NoticeSink() {
+        this.operationMap = new HashMap<>();
+        this.operationMap.put("c", "增加");
+        this.operationMap.put("u", "修改");
+        this.operationMap.put("d", "删除");
+    }
+
     @Override
     public void invoke(String value, Context context) {
         try {
             //value 转换为 DataChangeInfo
             DataChangeInfo dataChangeInfo = JsonUtil.parseObject(value, new TypeReference<DataChangeInfo>() {
             }, null);
-            System.out.println(String.format("事务id：%s, 表：%s", dataChangeInfo.getSource().getGtid(), dataChangeInfo.getSource().getTable()));
-//            System.out.println(String.format("表：%s,修改前:%s，修改后:%s",dataChangeInfo.getSource().getTable(), JsonUtil.toJSONString(dataChangeInfo.getBefore()), JsonUtil.toJSONString(dataChangeInfo.getAfter())));
+            log.info(String.format("事务id：%s, 表：%s，操作：%s",
+                    dataChangeInfo.getSource().getGtid(),
+                    dataChangeInfo.getSource().getTable(),
+                    operationMap.get(dataChangeInfo.getOp())));
+            log.info(value);
         } catch (Exception e) {
             log.error("处理数据变更异常", e);
         }
