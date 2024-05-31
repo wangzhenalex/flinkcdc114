@@ -37,7 +37,7 @@ public class NoticeSink implements SinkFunction<String>, Serializable {
                     dataChangeInfo.getSource().getGtid(),
                     dataChangeInfo.getSource().getTable(),
                     operationMap.get(dataChangeInfo.getOp())));
-            log.info(value);
+//            log.info(value);
         } catch (Exception e) {
             log.error("处理数据变更异常", e);
         }

@@ -6,3 +6,7 @@ logging:
 #loki
 loki:
   path: http://192.168.20.105:31001
+
+# path
+log:
+  path: logs
