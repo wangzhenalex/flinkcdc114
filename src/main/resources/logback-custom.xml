@@ -96,6 +96,9 @@
 
     <root level="info">
         <appender-ref ref="console"/>
+    </root>
+
+    <root level="debug">
         <appender-ref ref="LOKI" />
     </root>
 
